@@ -1,6 +1,8 @@
-# BenchmarkJava100-public
+# BenchmarkJava25-demo
 
-A demonstration of automated vulnerability detection, triage, and remediation using the AppSecAI platform on OWASP Benchmark test cases.
+A lightweight POC demonstration of automated vulnerability detection, triage, and remediation using the AppSecAI platform on OWASP Benchmark test cases.
+
+> **POC Version:** This repository is a slimmed-down version of the full BenchmarkJava100 demo, containing only the 40 Java test files that back the 135 vulnerabilities in the SARIF file. The webapp has been trimmed to only the 40 corresponding HTML test pages (down from ~2700), and the build configuration has been optimized for faster compilation. All CWE examples from the original remain intact.
 
 ## About This Repository
 

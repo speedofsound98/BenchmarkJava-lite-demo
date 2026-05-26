@@ -927,8 +927,8 @@
                 <version>3.14.1</version>
                 <configuration>
                     <fork>true</fork>
-                    <meminitial>1000m</meminitial>
-                    <maxmem>2000m</maxmem>
+                    <meminitial>256m</meminitial>
+                    <maxmem>512m</maxmem>
                     <release>${java.target}</release>
                 </configuration>
             </plugin>
@@ -1175,15 +1175,9 @@
                     </java>
                 </configuration>
 
-                <executions>
-                    <execution>
-                        <id>spotless-apply</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>apply</goal>
-                        </goals>
-                    </execution>
-                </executions>
+                <!-- POC: spotless apply removed from compile phase to speed up builds -->
+                <!-- Run manually with: mvn spotless:apply -->
+                <executions />
 
             </plugin>
 
