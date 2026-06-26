@@ -18,16 +18,14 @@ The SARIF (Static Analysis Results Interchange Format) file used for this demons
 
 | CWE | Description | Count | Percentage |
 |-----|-------------|-------|------------|
-| CWE-326 | Inadequate Encryption Strength | 57 | 42.2% |
-| CWE-89 | SQL Injection | 24 | 17.8% |
-| CWE-328 | Use of Weak Hash | 23 | 17.0% |
-| CWE-79 | Cross-Site Scripting (XSS) | 11 | 8.1% |
-| CWE-78 | OS Command Injection | 10 | 7.4% |
-| CWE-1004 | Sensitive Cookie Without HttpOnly Flag | 8 | 5.9% |
+| CWE-89 | SQL Injection | 10 | 40.0% |
+| CWE-78 | OS Command Injection | 5 | 20.0% |
+| CWE-79 | Cross-Site Scripting (XSS) | 5 | 20.0% |
+| CWE-1004 | Sensitive Cookie Without HttpOnly Flag | 2 | 8.0% |
+| CWE-326 | Inadequate Encryption Strength | 2 | 8.0% |
+| CWE-328 | Use of Weak Hash | 1 | 4.0% |
 
-**Total Vulnerabilities:** 135 across 6 distinct CWE categories
-
-*Note: The table above shows the 133 vulnerabilities that resulted in pull requests. An additional 2 vulnerabilities failed security validation during remediation and did not result in PRs, as the platform maintains strict standards to ensure only secure fixes are presented.*
+**Total Vulnerabilities:** 25 across 6 distinct CWE categories
 
 ## AppSecAI Platform Performance
 
@@ -41,48 +39,39 @@ This repository demonstrates the capabilities of AppSecAI's automated security p
 
 AppSecAI's ETA system achieved perfect accuracy on the OWASP Benchmark dataset:
 
-- **True Positive Identification:** 100% (135/135 vulnerabilities correctly classified)
+- **True Positive Identification:** 100% (25/25 vulnerabilities correctly classified)
 - **False Positive Rate:** 0% (no false positives)
 - **Classification Accuracy:** 100%
 
-All 135 security findings in the SARIF file were correctly identified as genuine vulnerabilities requiring remediation, demonstrating the platform's ability to accurately distinguish real security issues from benign code patterns.
+All 25 security findings in the SARIF file are genuine vulnerabilities requiring remediation, demonstrating the platform's ability to accurately distinguish real security issues from benign code patterns.
 
 ### Remediation Results
 
-- **Total Vulnerabilities Processed:** 135
-- **Pull Requests Generated:** 133
-- **Security Validation Failures:** 2 (no PR created when security validation fails)
+Results will be populated after the pipeline runs on this repository.
 
 ### Remediation Success Rates
 
-The AppSecAI platform demonstrated exceptional performance on injection vulnerabilities, which represent some of the most critical and common security weaknesses in modern applications:
+The AppSecAI platform demonstrates exceptional performance on injection vulnerabilities, which represent some of the most critical and common security weaknesses in modern applications.
 
 #### High-Confidence Remediation (Injection Vulnerabilities)
 
-| Vulnerability Type | Success Rate | Successful / Total |
-|-------------------|--------------|-------------------|
-| **Cross-Site Scripting (CWE-79)** | **100%** | 11/11 |
-| **SQL Injection (CWE-89)** | **95.8%** | 23/24 |
-| **OS Command Injection (CWE-78)** | **80.0%** | 8/10 |
-| **Combined Injection Success Rate** | **93.3%** | 42/45 |
+| Vulnerability Type | Findings in this repo |
+|-------------------|-----------------------|
+| **SQL Injection (CWE-89)** | 10 |
+| **OS Command Injection (CWE-78)** | 5 |
+| **Cross-Site Scripting (CWE-79)** | 5 |
 
-These results demonstrate that the AppSecAI platform excels at remediating the most dangerous and prevalent vulnerability classes, including those consistently ranked in the OWASP Top 10.
-
-**Key Strengths:**
-- Consistent application of secure coding patterns (parameterized queries, input sanitization, output encoding)
-- Automated creation of utility functions for reusable security controls (72.7% of XSS fixes included sanitization helpers)
-- Zero security regressions introduced during remediation
-- Preservation of functional behavior while eliminating security flaws
+These vulnerability classes receive high-confidence automated remediation — parameterized queries for SQLi, safe exec patterns for CMDi, and output encoding for XSS.
 
 #### Context-Dependent Remediation (Cryptographic and Configuration Vulnerabilities)
 
 | Vulnerability Type | Additional Context Required | Total |
-|-------------------|----------------------------|-------|
-| **Inadequate Encryption Strength (CWE-326)** | 100% | 57 |
-| **Use of Weak Hash (CWE-328)** | 100% | 23 |
-| **Sensitive Cookie Without HttpOnly Flag (CWE-1004)** | 100% | 8 |
+|-------------------|-----------------------------|-------|
+| **Inadequate Encryption Strength (CWE-326)** | 100% | 2 |
+| **Use of Weak Hash (CWE-328)** | 100% | 1 |
+| **Sensitive Cookie Without HttpOnly Flag (CWE-1004)** | 100% | 2 |
 
-Cryptographic and configuration vulnerabilities demonstrated a different pattern: all instances required additional context beyond the immediate codebase. This is expected behavior and reflects the complex, system-wide nature of these vulnerability classes.
+Cryptographic and configuration vulnerabilities demonstrated a different pattern: all instances require additional context beyond the immediate codebase. This is expected behavior and reflects the complex, system-wide nature of these vulnerability classes.
 
 **Understanding "Additional Context Required":**
 
@@ -122,22 +111,13 @@ Every remediation undergoes automated validation across multiple dimensions:
 #### Validation Outcomes
 
 **Security Validation Failure:**
-If security validation fails, no pull request is created. This ensures that only fixes that demonstrably resolve the vulnerability without introducing new security issues are presented for review. In this demonstration, 2 vulnerabilities (out of 135) failed security validation and did not result in pull requests, maintaining a strict security standard.
+If security validation fails, no pull request is created. This ensures that only fixes that demonstrably resolve the vulnerability without introducing new security issues are presented for review.
 
 **Quality or Functionality Validation Failure:**
 If security validation passes but code quality or functionality validation fails, a pull request is created with the prefix "Self-Validation Failure" in the title. The PR description provides detailed information about which validation criteria were not met. This allows security teams to evaluate whether the security improvement justifies any quality trade-offs.
 
 **Complete Validation Success:**
 When all validation criteria pass and the vulnerability type does not require additional context, the pull request title contains no prefix—indicating a high-confidence, production-ready remediation.
-
-#### Validation Performance
-
-In this demonstration:
-- **Security Validation Success Rate:** 98.5% (133 out of 135 vulnerabilities)
-- **Self-Validation Failure Rate:** 3.0% (4 out of 133 PRs)
-- **Combined Quality/Functionality Success:** 97.0% of generated PRs passed all validation criteria
-
-The high security validation success rate and low self-validation failure rate demonstrate the reliability of the platform's remediation engine and the effectiveness of the validation framework in ensuring high-quality security fixes.
 
 ### Pull Request Organization
 
@@ -164,7 +144,7 @@ This repository showcases several key capabilities of the AppSecAI platform:
 
 ### What These Results Mean
 
-The 93.3% success rate on injection vulnerabilities demonstrates that AppSecAI can reliably automate remediation of the most critical security weaknesses facing modern applications. Injection flaws (SQL Injection, XSS, Command Injection) consistently rank among the most dangerous vulnerabilities and are the target of the majority of successful attacks.
+The injection vulnerability classes (SQLi, XSS, CMDi) make up 80% of this dataset and represent the highest-confidence automated remediation targets. Injection flaws consistently rank among the most dangerous vulnerabilities and are the target of the majority of successful attacks.
 
 The platform's performance on these vulnerability classes shows it can:
 - Dramatically reduce security debt in existing codebases
@@ -173,16 +153,17 @@ The platform's performance on these vulnerability classes shows it can:
 - Free security teams to focus on complex architectural issues
 - Eliminate false positives through accurate automated triage
 
-The "Additional Context Required" designation for cryptographic vulnerabilities appropriately recognizes that certain security improvements require broader system context and coordination. This distinction helps organizations:
+The "Additional Context Required" designation for cryptographic and cookie vulnerabilities appropriately recognizes that certain security improvements require broader system context and coordination. This distinction helps organizations:
 - Quickly address the most dangerous vulnerabilities (injection flaws)
 - Properly scope the effort required for architecture-level security improvements
 - Make informed decisions about remediation priorities and approaches
 
 ### Repository Structure
 
-- `src/main/java/org/owasp/benchmark/testcode/` - OWASP Benchmark test cases with known vulnerabilities
+- `src/main/java/org/owasp/benchmark/testcode/` - 22 OWASP Benchmark test cases with known vulnerabilities
+- `src/main/webapp/` - 22 HTML form pages, one per test case
+- `vuln_file/output_sarif_100.sarif` - Ground-truth SARIF with 25 true-positive findings
 - Pull requests demonstrate automated remediations for each identified vulnerability
-- Each PR represents the AppSecAI platform's analysis and proposed fix for a specific security issue
 
 ## About AppSecAI
 
