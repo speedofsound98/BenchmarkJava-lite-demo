@@ -1,4 +1,4 @@
-# POC Context — BenchmarkJava25-demo
+# POC Context — BenchmarkJava22-demo
 
 This file summarizes the history, current state, and key decisions for this repository so future sessions have full context without re-exploration.
 
@@ -8,22 +8,24 @@ This file summarizes the history, current state, and key decisions for this repo
 
 A minimal POC demonstration of AppSecAI's automated triage (ETA) and remediation (EFA) platform, built on top of OWASP BenchmarkJava. The repo ships:
 
-- **40 Java test files** — a hand-picked subset of the original ~2,800 OWASP Benchmark test cases, covering 5 CWE categories
-- **40 HTML form pages** — one per Java test, used as the web UI for each test case
-- **`vuln_file/output_sarif_100.sarif`** — hand-crafted SARIF ground truth with 135 true-positive findings
+- **22 Java test files** — focused on the highest-impact CWE categories for the POC
+- **22 HTML form pages** — one per Java test, used as the web UI for each test case
+- **`vuln_file/output_sarif_100.sarif`** — hand-crafted SARIF ground truth (subset relevant to these 22 files)
 - **GitHub Actions workflows** — OpenGrep scan + AppSecAI triage/remediation pipeline
+
+Derived from **BenchmarkJava25-demo** (40 files), which was itself derived from the full OWASP BenchmarkJava (~2,800 test cases).
 
 ---
 
-## Java test file inventory (40 files)
+## Java test file inventory (22 files)
 
 | Category | Count | Test IDs |
 |----------|-------|----------|
-| cmdi (CWE-78) | 5 | 00176, 00293, 01191, 01942, 02244 |
-| crypto (CWE-326/327) | 11 | 00055, 00056, 00123, 00124, 00210, 00615, 01320, 01742, 01823, 01829, 02023 |
-| hash (CWE-328) | 9 | 00046, 00637, 00708, 00794, 00963, 01123, 01334, 02042, 02675 |
 | sqli (CWE-89) | 10 | 00008, 00204, 00328, 00441, 00603, 01963, 02177, 02369, 02534, 02655 |
+| cmdi (CWE-78) | 5 | 00176, 00293, 01191, 01942, 02244 |
 | xss (CWE-79) | 5 | 00290, 00492, 00724, 00728, 01347 |
+| crypto (CWE-326/327) | 1 | 00055 |
+| hash (CWE-328) | 1 | 00963 |
 
 Test files live in `src/main/java/org/owasp/benchmark/testcode/`.  
 Each is a `@WebServlet` servlet — auto-discovered at deploy time, no registry needed.

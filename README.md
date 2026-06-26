@@ -1,10 +1,10 @@
-# BenchmarkJava25-demo
+# BenchmarkJava22-demo
 
 A lightweight POC demonstration of automated vulnerability detection, triage, and remediation using the AppSecAI platform on OWASP Benchmark test cases.
 
-> **POC Version:** This repository is a slimmed-down version of the full BenchmarkJava100 demo, containing only the 40 Java test files that back the 135 vulnerabilities in the SARIF file. The webapp has been trimmed to exactly the 40 corresponding HTML test pages (reduced from 2,690 original files), and the build configuration has been optimized for faster compilation. All CWE categories from the original remain intact.
+> **POC Version:** This repository contains 22 Java test files focused on the most impactful vulnerability classes: SQL Injection (10), OS Command Injection (5), XSS (5), weak cryptography (1), and weak hashing (1). The webapp contains exactly the 22 corresponding HTML test pages. Build configuration is optimized for faster compilation.
 >
-> **Scanner noise note:** The full BenchmarkJava webapp ships with ~2,690 HTML form pages covering all ~2,800 original test cases. When only a subset of Java handlers is deployed, the orphaned HTML files cause SAST scanners (e.g. OpenGrep `--config auto`) to report hundreds of spurious findings. Trimming the webapp to match the active Java test files reduces scanner output from ~806 findings to approximately the 135 true positives in the SARIF ground truth.
+> **Scanner noise note:** The full BenchmarkJava webapp ships with ~2,690 HTML form pages covering all ~2,800 original test cases. When only a subset of Java handlers is deployed, the orphaned HTML files cause SAST scanners (e.g. OpenGrep `--config auto`) to report hundreds of spurious findings. This repo trims the webapp to match the active Java test files exactly.
 
 ## About This Repository
 
