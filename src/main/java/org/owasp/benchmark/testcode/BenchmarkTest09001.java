@@ -20,9 +20,9 @@ public class BenchmarkTest09001 extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
-    // CWE-798: Hard-coded credentials embedded directly in source.
-    String config = "api_key = 'a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6'";
-    String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.abc123def456";
+    // Credentials are loaded from environment configuration instead of being embedded in source.
+    String config = "api_key = '" + System.getenv("BENCHMARK_API_KEY") + "'";
+    String token = System.getenv("BENCHMARK_AUTH_TOKEN");
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response)
