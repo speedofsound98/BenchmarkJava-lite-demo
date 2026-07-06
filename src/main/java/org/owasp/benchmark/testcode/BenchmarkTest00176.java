@@ -50,10 +50,26 @@ public class BenchmarkTest00176 extends HttpServlet {
 
         String bar = param;
 
-        String cmd = "";
         String osName = System.getProperty("os.name");
+        String[] cmdArray;
         if (osName.indexOf("Windows") != -1) {
-            cmd = org.owasp.benchmark.helpers.Utils.getOSCommandString("echo");
+            // cmd.exe /c is a shell interpreter, so the argument it consumes must be
+            // strictly allowlisted to prevent shell metacharacter interpretation.
+            // Fail closed to a safe empty value and log the rejection (without the
+            // raw value) when the input does not match.
+            String safeBar = bar;
+            if (!safeBar.matches("[a-zA-Z0-9 ]*")) {
+                System.out.println(
+                        "WARNING: rejected invalid input for shell-consumed command argument (length="
+                                + safeBar.length() + ")");
+                safeBar = "";
+            }
+            cmdArray = new String[] {"cmd.exe", "/c", "echo", safeBar};
+        } else {
+            // No shell is invoked on this path; "echo" is executed directly as the
+            // process argv[0] with bar passed as a literal argument, so shell
+            // metacharacters in bar cannot be interpreted.
+            cmdArray = new String[] {"echo", bar};
         }
 
         String[] argsEnv = {"Foo=bar"};
@@ -61,7 +77,7 @@ public class BenchmarkTest00176 extends HttpServlet {
 
         try {
             Process p =
-                    r.exec(cmd + bar, argsEnv, new java.io.File(System.getProperty("user.dir")));
+                    r.exec(cmdArray, argsEnv, new java.io.File(System.getProperty("user.dir")));
             org.owasp.benchmark.helpers.Utils.printOSCommandResults(p, response);
         } catch (IOException e) {
             System.out.println("Problem executing cmdi - TestCase");
