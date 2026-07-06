@@ -51,7 +51,8 @@ public class BenchmarkTest00492 extends HttpServlet {
                 org.owasp.benchmark.helpers.ThingFactory.createThing();
         String bar = thing.doSomething(param);
 
-        response.setHeader("X-XSS-Protection", "0");
-        response.getWriter().write("Parameter value: " + bar);
+        response.setHeader("X-XSS-Protection", "1; mode=block");
+        response.getWriter()
+                .write("Parameter value: " + org.owasp.esapi.ESAPI.encoder().encodeForHTML(bar));
     }
 }
