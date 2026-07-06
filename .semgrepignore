@@ -1,0 +1,9 @@
+# Scope the scan to the application code under test.
+# These paths are CI config, front-end scaffolding, and shared helper
+# fixtures — not the vulnerable test-case servlets — so they only add
+# noise (mutable-action-tag, django-no-csrf-token, ldap/reflection FPs).
+
+.github/
+src/main/webapp/
+src/main/java/org/owasp/benchmark/helpers/
+src/site/

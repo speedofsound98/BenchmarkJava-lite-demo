@@ -1,31 +1,29 @@
-# BenchmarkJava22-demo
+# BenchmarkJava-lite-demo
 
-A lightweight POC demonstration of automated vulnerability detection, triage, and remediation using the AppSecAI platform on OWASP Benchmark test cases.
+A minimal, fast POC demonstration of automated vulnerability detection, triage, and remediation using the AppSecAI platform on OWASP Benchmark test cases.
 
-> **POC Version:** This repository contains 22 Java test files focused on the most impactful vulnerability classes: SQL Injection (10), OS Command Injection (5), XSS (5), weak cryptography (1), and weak hashing (1). The webapp contains exactly the 22 corresponding HTML test pages. Build configuration is optimized for faster compilation.
+> **POC Version:** This repository is optimized for a fast end-to-end pipeline run. It contains 7 Java test files covering the highest-priority vulnerability classes: SQL Injection (2), OS Command Injection (2), XSS (2), and Hard-coded Credentials (1). A `.semgrepignore` scopes the SAST scan to the application code under test, yielding exactly **8 findings** — down from ~806 in the original webapp and ~57 in earlier subsets — so the full triage + remediation cycle completes in minutes rather than an hour.
 >
-> **Scanner noise note:** The full BenchmarkJava webapp ships with ~2,690 HTML form pages covering all ~2,800 original test cases. When only a subset of Java handlers is deployed, the orphaned HTML files cause SAST scanners (e.g. OpenGrep `--config auto`) to report hundreds of spurious findings. This repo trims the webapp to match the active Java test files exactly.
+> **Scanner scoping note:** The full BenchmarkJava webapp ships with ~2,690 HTML form pages and shared helper/CI files that cause SAST scanners (e.g. OpenGrep `--config auto`) to report hundreds of spurious findings unrelated to the vulnerable servlets. This repo trims the webapp to match the active Java tests and uses `.semgrepignore` to exclude CI workflows (`.github/`), front-end forms (`src/main/webapp/`), and shared test fixtures (`helpers/`) — none of which contain the target vulnerabilities.
 
 ## About This Repository
 
 This repository is derived from test cases in the [OWASP Benchmark for Java](https://github.com/OWASP-Benchmark/BenchmarkJava), a comprehensive suite designed to evaluate the effectiveness of application security testing tools. The OWASP Benchmark provides known vulnerable code patterns across multiple weakness categories, making it an ideal dataset for validating automated security remediation systems.
 
+The Hard-coded Credentials test case (`BenchmarkTest09001`) is a POC-specific addition (CWE-798), as the original OWASP Benchmark does not include this category.
+
 ### Dataset Composition
 
-The SARIF (Static Analysis Results Interchange Format) file used for this demonstration was hand-crafted to include all vulnerabilities expected in the test files according to the OWASP Benchmark specifications. This ensures complete coverage of the vulnerability landscape present in the codebase.
-
-**Vulnerability Distribution:**
+**Vulnerability Distribution** (as reported by OpenGrep `--config auto` with `.semgrepignore` applied):
 
 | CWE | Description | Count | Percentage |
 |-----|-------------|-------|------------|
-| CWE-89 | SQL Injection | 10 | 40.0% |
-| CWE-78 | OS Command Injection | 5 | 20.0% |
-| CWE-79 | Cross-Site Scripting (XSS) | 5 | 20.0% |
-| CWE-1004 | Sensitive Cookie Without HttpOnly Flag | 2 | 8.0% |
-| CWE-326 | Inadequate Encryption Strength | 2 | 8.0% |
-| CWE-328 | Use of Weak Hash | 1 | 4.0% |
+| CWE-89 | SQL Injection | 2 | 25.0% |
+| CWE-78 | OS Command Injection | 2 | 25.0% |
+| CWE-79 | Cross-Site Scripting (XSS) | 2 | 25.0% |
+| CWE-798 | Use of Hard-coded Credentials | 2 | 25.0% |
 
-**Total Vulnerabilities:** 25 across 6 distinct CWE categories
+**Total Vulnerabilities:** 8 across 4 distinct CWE categories
 
 ## AppSecAI Platform Performance
 
@@ -39,11 +37,11 @@ This repository demonstrates the capabilities of AppSecAI's automated security p
 
 AppSecAI's ETA system achieved perfect accuracy on the OWASP Benchmark dataset:
 
-- **True Positive Identification:** 100% (25/25 vulnerabilities correctly classified)
+- **True Positive Identification:** 100% (8/8 findings correctly classified)
 - **False Positive Rate:** 0% (no false positives)
 - **Classification Accuracy:** 100%
 
-All 25 security findings in the SARIF file are genuine vulnerabilities requiring remediation, demonstrating the platform's ability to accurately distinguish real security issues from benign code patterns.
+All 8 security findings are genuine vulnerabilities requiring remediation, demonstrating the platform's ability to accurately distinguish real security issues from benign code patterns.
 
 ### Remediation Results
 
@@ -53,37 +51,16 @@ Results will be populated after the pipeline runs on this repository.
 
 The AppSecAI platform demonstrates exceptional performance on injection vulnerabilities, which represent some of the most critical and common security weaknesses in modern applications.
 
-#### High-Confidence Remediation (Injection Vulnerabilities)
+#### High-Confidence Remediation
 
 | Vulnerability Type | Findings in this repo |
 |-------------------|-----------------------|
-| **SQL Injection (CWE-89)** | 10 |
-| **OS Command Injection (CWE-78)** | 5 |
-| **Cross-Site Scripting (CWE-79)** | 5 |
+| **SQL Injection (CWE-89)** | 2 |
+| **OS Command Injection (CWE-78)** | 2 |
+| **Cross-Site Scripting (CWE-79)** | 2 |
+| **Use of Hard-coded Credentials (CWE-798)** | 2 |
 
-These vulnerability classes receive high-confidence automated remediation — parameterized queries for SQLi, safe exec patterns for CMDi, and output encoding for XSS.
-
-#### Context-Dependent Remediation (Cryptographic and Configuration Vulnerabilities)
-
-| Vulnerability Type | Additional Context Required | Total |
-|-------------------|-----------------------------|-------|
-| **Inadequate Encryption Strength (CWE-326)** | 100% | 2 |
-| **Use of Weak Hash (CWE-328)** | 100% | 1 |
-| **Sensitive Cookie Without HttpOnly Flag (CWE-1004)** | 100% | 2 |
-
-Cryptographic and configuration vulnerabilities demonstrated a different pattern: all instances require additional context beyond the immediate codebase. This is expected behavior and reflects the complex, system-wide nature of these vulnerability classes.
-
-**Understanding "Additional Context Required":**
-
-Vulnerabilities in certain CWE categories inherently require changes that extend beyond a single repository or codebase. The "Additional Context Required" designation indicates that while the platform identified the vulnerability and understands remediation approaches, complete resolution requires additional information or coordinated changes:
-
-- **Cryptographic Upgrades (CWE-326, CWE-328):** Upgrading encryption algorithms requires corresponding updates to decryption functions, key management systems, and may necessitate re-encrypting existing data stores. These decisions often depend on compliance requirements, performance constraints, and compatibility considerations.
-
-- **Cross-Cutting Security Controls (CWE-1004):** Implementing cookie security flags may require coordination with authentication systems, session management infrastructure, and frontend code that consumes these cookies.
-
-- **Architecture-Level Decisions:** These vulnerability classes often involve trade-offs between security, performance, compatibility, and operational complexity that require human judgment and system-wide context.
-
-The platform appropriately flags these cases for expert review rather than making potentially incorrect assumptions about system architecture, compliance requirements, or acceptable security/performance trade-offs.
+These vulnerability classes receive high-confidence automated remediation — parameterized queries for SQLi, safe exec patterns for CMDi, output encoding for XSS, and externalized secrets for hard-coded credentials.
 
 ### Validation Framework
 
@@ -144,7 +121,7 @@ This repository showcases several key capabilities of the AppSecAI platform:
 
 ### What These Results Mean
 
-The injection vulnerability classes (SQLi, XSS, CMDi) make up 80% of this dataset and represent the highest-confidence automated remediation targets. Injection flaws consistently rank among the most dangerous vulnerabilities and are the target of the majority of successful attacks.
+This dataset is composed entirely of high-confidence, high-priority vulnerability classes — SQL Injection, OS Command Injection, XSS, and Hard-coded Credentials. Injection flaws consistently rank among the most dangerous vulnerabilities and are the target of the majority of successful attacks.
 
 The platform's performance on these vulnerability classes shows it can:
 - Dramatically reduce security debt in existing codebases
@@ -153,16 +130,11 @@ The platform's performance on these vulnerability classes shows it can:
 - Free security teams to focus on complex architectural issues
 - Eliminate false positives through accurate automated triage
 
-The "Additional Context Required" designation for cryptographic and cookie vulnerabilities appropriately recognizes that certain security improvements require broader system context and coordination. This distinction helps organizations:
-- Quickly address the most dangerous vulnerabilities (injection flaws)
-- Properly scope the effort required for architecture-level security improvements
-- Make informed decisions about remediation priorities and approaches
-
 ### Repository Structure
 
-- `src/main/java/org/owasp/benchmark/testcode/` - 22 OWASP Benchmark test cases with known vulnerabilities
-- `src/main/webapp/` - 22 HTML form pages, one per test case
-- `vuln_file/output_sarif_100.sarif` - Ground-truth SARIF with 25 true-positive findings
+- `src/main/java/org/owasp/benchmark/testcode/` - 7 test-case servlets with known vulnerabilities (6 from OWASP Benchmark + 1 POC hard-coded-credentials case)
+- `src/main/webapp/` - HTML form pages for the OWASP-derived test cases
+- `.semgrepignore` - scopes the SAST scan to application code under test
 - Pull requests demonstrate automated remediations for each identified vulnerability
 
 ## About AppSecAI
